@@ -2,7 +2,7 @@
 /*
 the lines above  needs to be declared before #include "FastLed.h"
 NBIS2SERIALPINS represents the number of pins used by the esp value, it ranges from 1->15
-NUM_LEDS_PER_STRIP the length of your strip if you have different strips size put here the longuest strip
+NUM_LEDS_PER_STRIP the length of your strip if you have different strips size put here the longest strip
 for each pin you would be able to drive 8 virtuals pins
 linked the 74hc595 with the strips
 Q0/PIN 15 => VIRTUAL PIN 8
@@ -20,15 +20,14 @@ Q7/PIN 7  => VIRTUAL PIN 1
 #define NUM_LEDS_PER_STRIP 60 //the length of your strip if you have different strips size put here the longuest strip
 
 #include "FastLED.h"
-#define LATCH_PIN 13
-#define CLOCK_PIN 27 //for a reason I don't know, the CLOCK_PIN needs to be >=16
-
+#define CLOCK_PIN 25 //for a reason I don't know, the CLOCK_PIN needs to be >=16
+#define LATCH_PIN 27
 
 #define NUM_STRIPS 28
 #define NUM_LEDS NUM_LEDS_PER_STRIP * NUM_STRIPS
 CRGB leds[NUM_LEDS];
 
-int Pins[NBIS2SERIALPINS]={12,14,26,25}; //pins examples
+int Pins[NBIS2SERIALPINS]={22,12,14,26}; //pins examples
 /*
 * Define the esp pins you are using
 * pin 12 will drive strip 1->8
@@ -36,30 +35,30 @@ int Pins[NBIS2SERIALPINS]={12,14,26,25}; //pins examples
 * pin 26 will drive strip 17->24
 * pin 25 will drive strip 25->32 but you need only 25->28
 */
-
 void setup() {
     Serial.begin(115200);
     //this is the line to configure the driver
     FastLED.addLeds<VIRTUAL_DRIVER,Pins,CLOCK_PIN, LATCH_PIN>(leds,NUM_LEDS_PER_STRIP);
     FastLED.setBrightness(64);
-
 }
 int start=0;
+
 void loop() {
     fill_solid(leds, NUM_LEDS, CRGB(15,15,15));
     /*
     * this code will create a snake on each strip where the length is the strips number
     */
     for(int i=0;i<NUM_STRIPS;i++){
-        int offset=i*NUM_LEDS_PER_STRIP;   //this is the offest of the strip number i
+        int offset=i*NUM_LEDS_PER_STRIP;   //this is the offset of the strip number i
         for(int k=0;k<i+1;k++){
             leds[(start+k)%NUM_LEDS_PER_STRIP+offset]=CHSV(i*255/NUM_STRIPS,255,255);
         }
 
     }
-    long     lastHandle = __clock_cycles();
+    random8();
+    long lastHandle = __clock_cycles();
     FastLED.show();
-    long   lasthandle2=__clock_cycles();
+    long lasthandle2=__clock_cycles();
     Serial.printf("FPS fastled: %f \n", (float) 240000000L/(lasthandle2 - lastHandle));
     start++;
     delay(30);
