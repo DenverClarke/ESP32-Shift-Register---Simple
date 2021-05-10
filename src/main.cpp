@@ -39,7 +39,7 @@ int Pins[NBIS2SERIALPINS]={22,14,26,32}; //example pins
 */
 
 void basic(){
-  EVERY_N_MILLIS(80){
+  EVERY_N_MILLIS(8){
     //FastLED.clear();
     for(int i = 0; i < NUM_LEDS; i++){
       leds[i] = CHSV(hue + i*5, 255, 255);
@@ -79,7 +79,7 @@ void setup() {
     Serial.begin(115200);
     //FastLED.setDither(0);
     FastLED.addLeds<VIRTUAL_DRIVER,Pins,CLOCK_PIN, LATCH_PIN>(leds,NUM_LEDS_PER_STRIP);
-    FastLED.setBrightness(14);
+    FastLED.setBrightness(44);
 }
 
 void loop() {
