@@ -1,6 +1,9 @@
 #include <Arduino.h>
+#define FASTLED_ALLOW_INTERRUPTS 0
 #include <dumbconfig.h>
-#include <Myriad_BT.h>
+//#include <dumbbt.h>
+#include <BluetoothSerial.h>
+BluetoothSerial Bluetooth;
 
 void basic(){
   static byte huep;
@@ -32,44 +35,17 @@ void basic(){
       Serial.println(calculate_unscaled_power_mW(leds, NUM_LEDS)/5/100);
     }
   }
-}/*
-
-void snake(){
-  
-  fill_solid(leds, NUM_LEDS, CRGB(15,15,15));
-  for(int i=0;i<NUM_STRIPS;i++){      // Snake
-      int offset=i*NUM_LEDS_PER_STRIP;   //this is the offset of the strip number i
-      for(int k=0;k<i+1;k++){
-          leds[(start+k)%NUM_LEDS_PER_STRIP+offset]=CHSV(i*255/NUM_STRIPS,255,255);
-      }
-  }
-  for(int i = 0; i < NUM_LEDS; i++){
-      leds[i] = CHSV(hue + i*5, 255, 255);
-    }
-    hue++;
-  random8();
-  long lastHandle = __clock_cycles();
-  FastLED.show();
-  long lasthandle2=__clock_cycles();
-  Serial.printf("FPS fastled: %f \n", (float) 240000000L/(lasthandle2 - lastHandle));
-  start++;
-  delay(30);
 }
-*/
+
 void setup() {
+    Bluetooth.begin("blooth");
     Serial.begin(115200);
     //FastLED.setDither(0);
     FastLED.addLeds<VIRTUAL_DRIVER,Pins,CLOCK_PIN, LATCH_PIN>(leds,NUM_LEDS_PER_STRIP);
     FastLED.setBrightness(25);
-    //Bluetooth.begin("Starshroud");
 }
 
 void loop() {
-  EVERY_N_MILLIS(4){
     basic();
-    //Tropic(newP);
-    FastLED.show();
-  }
-  //basic();
-  //snake();
+    //BTproc();
 }
